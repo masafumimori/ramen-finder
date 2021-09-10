@@ -27,20 +27,7 @@ function Map() {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
     setMap(map);
-  }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
-    console.log("unmounted");
-    setMap(null);
-  }, []);
-
-  const [currentPosition, setCurrentPosition] = useState<LocationType>({
-    lat: 0,
-    lng: 0,
-  });
-  const [input, setInput] = useState("");
-
-  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
@@ -53,7 +40,18 @@ function Map() {
         }
       );
     }
-  }, [isLoaded]);
+  }, []);
+
+  const onUnmount = React.useCallback(function callback(map) {
+    console.log("unmounted");
+    setMap(null);
+  }, []);
+
+  const [currentPosition, setCurrentPosition] = useState<LocationType>({
+    lat: 0,
+    lng: 0,
+  });
+  const [input, setInput] = useState("");
 
   const findRamenPlace = () => {
     console.log("clicked");
