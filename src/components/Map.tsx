@@ -60,6 +60,7 @@ function Map() {
 
     let request = {
       location: currentPosition,
+      keyword: input,
       name: input,
       radius: 500,
       type: "restaurant",
@@ -99,12 +100,17 @@ function Map() {
     const marker = new google.maps.Marker({
       map,
       position: place.geometry.location,
+      title: place.name,
+      icon: "https://image.flaticon.com/icons/png/32/1623/1623786.png",
+      animation: google.maps.Animation.DROP,
     });
 
     google.maps.event.addListener(marker, "click", (e: any) => {
-      e.preventDefault();
-      infowindow.setContent(place.name || "");
-      infowindow.open(map);
+      infowindow.setContent(place.name);
+      infowindow.open({
+        anchor: marker,
+        map,
+      });
     });
   }
 
