@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import RamenButton from "./RamenButton";
 
 const containerStyle = {
   width: "100%",
-  height: "100vh",
+  height: "50vh",
 };
 
-type Location = {
-  lat: number;
-  lng: number;
-};
+export type LocationType = google.maps.LatLng | google.maps.LatLngLiteral;
 
 function Map() {
   const { isLoaded } = useJsApiLoader({
@@ -22,7 +20,8 @@ function Map() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY as string,
   });
 
-  const [map, setMap] = React.useState(null);
+  type mapType = google.maps.Map | null;
+  const [map, setMap] = React.useState<mapType>(null);
 
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -31,38 +30,98 @@ function Map() {
   }, []);
 
   const onUnmount = React.useCallback(function callback(map) {
+    console.log("unmounted");
     setMap(null);
   }, []);
 
-  const [currentPosition, setCurrentPosition] = useState<Location>({
+  const [currentPosition, setCurrentPosition] = useState<LocationType>({
     lat: 0,
     lng: 0,
   });
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
-          const pos: Location = {
+          const pos: LocationType = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
           setCurrentPosition(pos);
+          console.log(currentPosition);
         }
       );
     }
-  }, []);
+  }, [isLoaded]);
+
+  const findRamenPlace = () => {
+    console.log("clicked");
+
+    let request = {
+      location: currentPosition,
+      name: input,
+      radius: 500,
+      type: "restaurant",
+    };
+
+    let service = new window.google.maps.places.PlacesService(map as any);
+    service.nearbySearch(request, (results, status) => {
+      console.log(status);
+
+      if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+        alert(`Sorry there isn't any restaurants named ${input}`);
+      }
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        console.log(results.length);
+        console.log(results);
+
+        for (let i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+        }
+      } else {
+        console.log("failed");
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (!input) return;
+
+    findRamenPlace();
+  }, [input]);
+
+  const infowindow = new window.google.maps.InfoWindow();
+
+  function createMarker(place: google.maps.places.PlaceResult) {
+    if (!place.geometry || !place.geometry.location) return;
+
+    const marker = new google.maps.Marker({
+      map,
+      position: place.geometry.location,
+    });
+
+    google.maps.event.addListener(marker, "click", (e: any) => {
+      e.preventDefault();
+      infowindow.setContent(place.name || "");
+      infowindow.open(map);
+    });
+  }
 
   return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={currentPosition}
-      zoom={18}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      {currentPosition && <Marker position={currentPosition} />}
-    </GoogleMap>
+    <>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={currentPosition}
+        zoom={19}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+        {currentPosition && <Marker position={currentPosition} />}
+      </GoogleMap>
+      <RamenButton setInput={setInput} />
+      {/* <SearchButtons setInput={setInput} foodNames={foodNames} /> */}
+    </>
   ) : (
     <></>
   );
