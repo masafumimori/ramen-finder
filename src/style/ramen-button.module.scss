@@ -1,10 +1,5 @@
 @import "./variables.module";
 
-.searchButton {
-  position: relative;
-  display: inline-block;
-  margin: 20px;
-}
 
 .searchButton {
   color: white;
@@ -16,6 +11,7 @@
   display: block;
   position: relative;
   padding: 20px 40px;
+  margin: 20px;
 
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   text-shadow: 0px 1px 0px #000;
@@ -29,6 +25,9 @@
   -moz-border-radius: 5px;
   border-radius: 5px;
 
+  &:hover {
+    cursor: pointer;
+  }
   &:active {
     top: 10px;
     background-color: #f78900;
