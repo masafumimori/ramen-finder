@@ -26,6 +26,11 @@ function Map() {
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
+
+    setTimeout(() => {
+      map.setZoom(15);
+    }, 1000);
+
     setMap(map);
 
     if (navigator.geolocation) {
