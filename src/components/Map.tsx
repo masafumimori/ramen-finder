@@ -115,6 +115,10 @@ function Map(props: { input: string }) {
     });
   }
 
+  const mapOptions: google.maps.MapOptions = {
+    mapId: "4cf8d67891b576c0",
+  };
+
   return isLoaded ? (
     <>
       <GoogleMap
@@ -123,6 +127,7 @@ function Map(props: { input: string }) {
         zoom={18}
         onLoad={onLoad}
         onUnmount={onUnmount}
+        options={mapOptions}
       >
         {currentPosition && (
           <Marker position={currentPosition} icon={humanIcon} />
