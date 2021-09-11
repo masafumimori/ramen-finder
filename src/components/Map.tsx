@@ -1,20 +1,19 @@
-import React, { FormEvent, useEffect, useState } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
-import RamenButton from "./RamenButton";
+import React, { useCallback, useEffect, useState } from "react";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
-  height: "50vh",
+  height: "100%",
 };
+
+const humanIcon = "https://cdn-icons-png.flaticon.com/32/81/81184.png";
+const ramenIcon = "https://image.flaticon.com/icons/png/32/1623/1623786.png";
 
 export type LocationType = google.maps.LatLng | google.maps.LatLngLiteral;
 
-function Map() {
+function Map(props: { input: string }) {
+  const { input } = props;
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY as string,
@@ -22,9 +21,14 @@ function Map() {
 
   type mapType = google.maps.Map | null;
   const [map, setMap] = React.useState<mapType>(null);
+  const [currentPosition, setCurrentPosition] = useState<LocationType>({
+    lat: 0,
+    lng: 0,
+  });
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
+
     map.fitBounds(bounds);
 
     setTimeout(() => {
@@ -47,16 +51,10 @@ function Map() {
     }
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = useCallback(function callback(map) {
     console.log("unmounted");
     setMap(null);
   }, []);
-
-  const [currentPosition, setCurrentPosition] = useState<LocationType>({
-    lat: 0,
-    lng: 0,
-  });
-  const [input, setInput] = useState("");
 
   const findRamenPlace = () => {
     console.log("clicked");
@@ -104,7 +102,7 @@ function Map() {
       map,
       position: place.geometry.location,
       title: place.name,
-      icon: "https://image.flaticon.com/icons/png/32/1623/1623786.png",
+      icon: ramenIcon,
       animation: google.maps.Animation.DROP,
     });
 
@@ -122,13 +120,14 @@ function Map() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={currentPosition}
-        zoom={19}
+        zoom={18}
         onLoad={onLoad}
         onUnmount={onUnmount}
       >
-        {currentPosition && <Marker position={currentPosition} />}
+        {currentPosition && (
+          <Marker position={currentPosition} icon={humanIcon} />
+        )}
       </GoogleMap>
-      <RamenButton setInput={setInput} />
       {/* <SearchButtons setInput={setInput} foodNames={foodNames} /> */}
     </>
   ) : (
