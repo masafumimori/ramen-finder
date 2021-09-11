@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import { ResultType } from "../pages/RamenMap";
 
 const containerStyle = {
   width: "100%",
@@ -11,8 +12,8 @@ const ramenIcon = "https://image.flaticon.com/icons/png/32/1623/1623786.png";
 
 export type LocationType = google.maps.LatLng | google.maps.LatLngLiteral;
 
-function Map(props: { input: string }) {
-  const { input } = props;
+function Map(props: { input: string; setResults: (e: ResultType) => void }) {
+  const { input, setResults } = props;
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -57,24 +58,22 @@ function Map(props: { input: string }) {
   }, []);
 
   const findRamenPlace = () => {
-
     let request = {
       location: currentPosition,
       keyword: input,
       name: input,
-      radius: 500,
+      radius: 1000,
       type: "restaurant",
     };
 
     let service = new window.google.maps.places.PlacesService(map as any);
     service.nearbySearch(request, (results, status) => {
-      console.log(status);
 
       if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
         alert(`Sorry there isn't any restaurants named ${input}`);
       }
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-        console.log(results.length);
+        setResults(results);
 
         for (let i = 0; i < results.length; i++) {
           createMarker(results[i]);
