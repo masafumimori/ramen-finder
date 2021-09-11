@@ -32,6 +32,8 @@
     height: 50%;
     @include media(tab) {
       width: 80%;
+    }@include media(pc) {
+      width: 50%;
     }
   }
 }
