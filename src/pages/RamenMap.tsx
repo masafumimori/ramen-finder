@@ -9,7 +9,7 @@ function RamenMap() {
   return (
     <div className={Style.remanMapWrapper}>
       <div className={Style.remanMapWrapper__content}>
-        <Title title="Welcome to Ramen Finder!" />
+        <Title />
         <div className={Style.mapContainer}>
           <Map input={input} />
         </div>
