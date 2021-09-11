@@ -91,10 +91,7 @@ function Map(props: { input: string }) {
     findRamenPlace();
   }, [input]);
 
-  const [infowindow, setInfowindow] = useState<google.maps.InfoWindow>();
-  useEffect(() => {
-    setInfowindow(new google.maps.InfoWindow());
-  }, []);
+  const infowindow = new google.maps.InfoWindow();
 
   function createMarker(place: google.maps.places.PlaceResult) {
     if (!place.geometry || !place.geometry.location) return;
