@@ -1,0 +1,32 @@
+@charset "UTF-8";
+// サイトの基本設定 変数やmixin以外は記載NG
+
+// ブレイクポイント モバイルファーストの記述
+$breakpoints: (
+  "sp": "screen and (max-width: 460px)",
+  "tab": "screen and (min-width: 461px)",
+  "pc": "screen and (min-width: 960px)",
+);
+// 呼び出し例 @include media(tab){}
+@mixin media($breakpoint) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+// フォントサイズ
+// コンテンツの最大幅
+$content-max-width: 1200px;
+
+// z-indexのレイヤー
+$layer: (
+  "modal": 100,
+  "header": 20,
+  "tooltip": 10,
+  "default": 1,
+  "background": -10,
+);
+// 呼び出し例 @include z-index(tooltip);
+@mixin z-index($key) {
+  z-index: map-get($layer, $key);
+}

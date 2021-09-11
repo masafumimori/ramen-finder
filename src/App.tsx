@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import Map from "./components/Map";
+import RamenMap from "./pages/RamenMap";
 
 function App() {
   return (
     <div className="App">
-      <Map />
+      <RamenMap />
     </div>
   );
 }
