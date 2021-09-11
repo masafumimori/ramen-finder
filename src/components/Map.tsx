@@ -57,7 +57,6 @@ function Map(props: { input: string }) {
   }, []);
 
   const findRamenPlace = () => {
-    console.log("clicked");
 
     let request = {
       location: currentPosition,
