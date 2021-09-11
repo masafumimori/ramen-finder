@@ -76,7 +76,6 @@ function Map(props: { input: string }) {
       }
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         console.log(results.length);
-        console.log(results);
 
         for (let i = 0; i < results.length; i++) {
           createMarker(results[i]);
@@ -89,11 +88,13 @@ function Map(props: { input: string }) {
 
   useEffect(() => {
     if (!input) return;
-
     findRamenPlace();
   }, [input]);
 
-  const infowindow = new window.google.maps.InfoWindow();
+  const [infowindow, setInfowindow] = useState<google.maps.InfoWindow>();
+  useEffect(() => {
+    setInfowindow(new google.maps.InfoWindow());
+  }, []);
 
   function createMarker(place: google.maps.places.PlaceResult) {
     if (!place.geometry || !place.geometry.location) return;
@@ -107,6 +108,8 @@ function Map(props: { input: string }) {
     });
 
     google.maps.event.addListener(marker, "click", (e: any) => {
+      if (!infowindow) return;
+
       infowindow.setContent(place.name);
       infowindow.open({
         anchor: marker,
