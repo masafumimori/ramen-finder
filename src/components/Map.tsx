@@ -47,6 +47,13 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
           };
           setCurrentPosition(pos);
           console.log(currentPosition);
+        },
+        (error) => {
+          if (error.code == error.PERMISSION_DENIED) {
+            alert("you denied me :-(");
+          } else {
+            alert(error.code);
+          }
         }
       );
     }
