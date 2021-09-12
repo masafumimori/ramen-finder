@@ -33,6 +33,7 @@ export function register(config) {
 
     // The URL constructor is available in all browsers that support SW.
         const publicUrl = new URL(process.env.REACT_APP_PUBLIC_URL, window.location.href);
+      console.log( `.REACT_APP_PUBLIC_URL = ${process.env.REACT_APP_PUBLIC_URL}`);
       console.log( `publicUrl = ${publicUrl}`);
         
     if (publicUrl.origin !== window.location.origin) {
