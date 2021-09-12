@@ -32,7 +32,9 @@ export function register(config) {
      
 
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(process.env.REACT_APP_PUBLIC_URL, window.location.href);
+        const publicUrl = new URL(process.env.REACT_APP_PUBLIC_URL, window.location.href);
+      console.log( `publicUrl = ${publicUrl}`);
+        
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -40,7 +42,8 @@ export function register(config) {
       return;
     }
 
-    window.addEventListener('load', () => {
+        window.addEventListener('load', () => {
+      console.log( `sw.js = ${process.env.REACT_APP_PUBLIC_URL}/sw.js`);
       const swUrl = `${process.env.REACT_APP_PUBLIC_URL}/sw.js`;
 
       if (isLocalhost) {
