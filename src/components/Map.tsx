@@ -47,15 +47,17 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
           };
           setCurrentPosition(pos);
           console.log(currentPosition);
-        },
-        (error) => {
-          if (error.code == error.PERMISSION_DENIED) {
-            alert("you denied me :-(");
-          } else {
-            alert(error.code);
-          }
         }
+        // (error) => {
+        //   if (error.code == error.PERMISSION_DENIED) {
+        //     alert("you denied me :-(");
+        //   } else {
+        //     alert(error.code);
+        //   }
+        // }
       );
+    } else {
+      alert("not allowed");
     }
   }, []);
 
@@ -75,7 +77,6 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
 
     let service = new window.google.maps.places.PlacesService(map as any);
     service.nearbySearch(request, (results, status) => {
-
       if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
         alert(`Sorry there isn't any restaurants named ${input}`);
       }
