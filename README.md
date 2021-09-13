@@ -2,4 +2,4 @@
 You can find ramen restaurants nearby.
 
 # Demo
-You can try it [here](https://ramen-finder.netlify.app/)
+You can try it [here](https://ramenfinder.netlify.app/)
