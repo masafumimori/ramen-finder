@@ -9,6 +9,12 @@ const containerStyle = {
 
 const humanIcon = "https://cdn-icons-png.flaticon.com/32/81/81184.png";
 const ramenIcon = "https://image.flaticon.com/icons/png/32/1623/1623786.png";
+const defaultLocation: LocationType = {
+  // Tokyo Tower
+  lat: 35.6586,
+  lng: 139.7454,
+};
+let markers: google.maps.Marker[] = [];
 
 export type LocationType = google.maps.LatLng | google.maps.LatLngLiteral;
 
@@ -59,12 +65,20 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
     } else {
       alert("not allowed");
     }
-  }, []);
+  };
 
-  const onUnmount = useCallback(function callback(map) {
-    console.log("unmounted");
-    setMap(null);
-  }, []);
+  function setMapOnAll(map: google.maps.Map | null) {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
+    }
+  }
+
+  useEffect(() => {
+    // Refresh location and markers
+    getLocation();
+    setMapOnAll(null);
+    markers = [];
+  }, [refresh]);
 
   const findRamenPlace = () => {
     let request = {
@@ -109,6 +123,7 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
       icon: ramenIcon,
       animation: google.maps.Animation.DROP,
     });
+    markers.push(marker);
 
     google.maps.event.addListener(marker, "click", (e: any) => {
       if (!infowindow) return;
