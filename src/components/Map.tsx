@@ -17,9 +17,14 @@ const defaultLocation: LocationType = {
 let markers: google.maps.Marker[] = [];
 
 export type LocationType = google.maps.LatLng | google.maps.LatLngLiteral;
+type MapPropType = {
+  input: string;
+  setResults: (e: ResultType) => void;
+  refresh: any;
+};
 
-function Map(props: { input: string; setResults: (e: ResultType) => void }) {
-  const { input, setResults } = props;
+function Map(props: MapPropType) {
+  const { input, setResults, refresh } = props;
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -44,6 +49,15 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
 
     setMap(map);
 
+    getLocation();
+  }, []);
+
+  const onUnmount = useCallback(function callback(map) {
+    console.log("unmounted");
+    setMap(null);
+  }, []);
+
+  const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
@@ -52,18 +66,19 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
             lng: position.coords.longitude,
           };
           setCurrentPosition(pos);
-          console.log(currentPosition);
         },
         (error) => {
+          setCurrentPosition(defaultLocation);
           if (error.code == error.PERMISSION_DENIED) {
-            alert("you denied me :-(");
+            alert("you denied me :-( \n");
           } else {
-            alert(error.code);
+            alert("Something went wrong: " + error.code);
           }
         }
       );
     } else {
-      alert("not allowed");
+      setCurrentPosition(defaultLocation);
+      alert("Please allow me to use location service to find where you are");
     }
   };
 
@@ -92,7 +107,9 @@ function Map(props: { input: string; setResults: (e: ResultType) => void }) {
     let service = new window.google.maps.places.PlacesService(map as any);
     service.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-        alert(`Sorry there isn't any restaurants named ${input}`);
+        alert(
+          "Sorry there is no ramen restaurants nearby... Naruto must be so sad :("
+        );
       }
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         setResults(results);
