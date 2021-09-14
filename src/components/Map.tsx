@@ -33,10 +33,8 @@ function Map(props: MapPropType) {
 
   type mapType = google.maps.Map | null;
   const [map, setMap] = React.useState<mapType>(null);
-  const [currentPosition, setCurrentPosition] = useState<LocationType>({
-    lat: 0,
-    lng: 0,
-  });
+  const [currentPosition, setCurrentPosition] =
+    useState<LocationType>(defaultLocation);
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
