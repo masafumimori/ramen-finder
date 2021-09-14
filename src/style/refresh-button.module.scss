@@ -1,0 +1,14 @@
+@import "./variables.module";
+
+.refreshButton {
+  z-index: inherit;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
