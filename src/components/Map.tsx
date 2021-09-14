@@ -80,17 +80,13 @@ function Map(props: MapPropType) {
     }
   };
 
-  function setMapOnAll(map: google.maps.Map | null) {
-    for (let i = 0; i < markers.length; i++) {
-      markers[i].setMap(map);
-    }
-  }
-
   useEffect(() => {
-    // Refresh location and markers
-    getLocation();
-    setMapOnAll(null);
+    // Refresh markers and location
+    markers.map((marker) => {
+      marker.setMap(null);
+    });
     markers = [];
+    getLocation();
   }, [refresh]);
 
   const findRamenPlace = () => {
